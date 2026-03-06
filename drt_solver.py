@@ -61,14 +61,14 @@ def solve_drt_core(freq, z_re, z_im, mode, lam):
         diff_k = x_int - log_tau[k]
         rbf_k = np.exp(-(epsilon * diff_k) ** 2)
         deriv_cache[k] = -2.0 * epsilon ** 2 * diff_k * rbf_k
-        A_re[:, k] = np.trapz(re_kernel * rbf_k[None, :], dx=dx, axis=1)
-        A_im[:, k] = np.trapz(im_kernel * rbf_k[None, :], dx=dx, axis=1)
+        A_re[:, k] = np.trapezoid(re_kernel * rbf_k[None, :], dx=dx, axis=1)
+        A_im[:, k] = np.trapezoid(im_kernel * rbf_k[None, :], dx=dx, axis=1)
 
     del re_kernel, im_kernel
 
     M = np.zeros((n, n))
     for k in range(n):
-        M[k, k:] = np.trapz(deriv_cache[k] * deriv_cache[k:], dx=dx, axis=1)
+        M[k, k:] = np.trapezoid(deriv_cache[k] * deriv_cache[k:], dx=dx, axis=1)
         M[k:, k] = M[k, k:]
 
     del deriv_cache
